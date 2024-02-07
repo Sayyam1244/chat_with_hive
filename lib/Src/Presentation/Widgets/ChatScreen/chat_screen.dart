@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:ffi';
 import 'dart:io';
 import 'package:chat_with_hive/Src/Application/Services/Dbservices/db_services.dart';
 import 'package:chat_with_hive/Src/Application/Services/FileServices/file_services.dart';
@@ -12,6 +11,7 @@ import 'package:chat_with_hive/Src/Presentation/Common/app_text.dart';
 import 'package:chat_with_hive/Src/Presentation/Common/chat.dart';
 import 'package:chat_with_hive/Src/Presentation/Common/custom_small_button.dart';
 import 'package:chat_with_hive/Src/Presentation/Common/custom_textfield.dart';
+import 'package:chat_with_hive/Src/Presentation/Widgets/ChatScreen/Common/chat_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -61,23 +61,10 @@ class _ChatScreenState extends State<ChatScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: chatAppbar(widget.otherUserId, context),
         backgroundColor: AppColors.lightWhite,
         body: Column(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                color: AppColors.greenColor.withOpacity(0.1),
-                border: const Border(
-                  bottom: BorderSide(color: AppColors.greenColor),
-                ),
-              ),
-              height: 70.h,
-              child: Center(
-                child: Apptext(
-                    text: widget.otherUserId,
-                    style: AppTextStyles.circularStdRegular(fontSize: 30)),
-              ),
-            ),
             Expanded(
               child: ValueListenableBuilder(
                 valueListenable: userChats,
@@ -95,9 +82,11 @@ class _ChatScreenState extends State<ChatScreen> {
                       },
                     );
                   } else {
-                    return Apptext(
-                        text: 'No chats',
-                        style: AppTextStyles.circularStdBold());
+                    return Center(
+                      child: Apptext(
+                          text: 'No chats',
+                          style: AppTextStyles.circularStdBold()),
+                    );
                   }
                 },
               ),
@@ -105,7 +94,6 @@ class _ChatScreenState extends State<ChatScreen> {
             ValueListenableBuilder(
               valueListenable: files,
               builder: (context, value, child) {
-                log(value.length.toString());
                 return Column(
                   children: [
                     if (value.isNotEmpty)
@@ -235,14 +223,22 @@ class _ChatScreenState extends State<ChatScreen> {
                           fillColor: AppColors.whiteColor,
                           filled: true,
                           contentPadding: EdgeInsets.symmetric(
-                              horizontal: 20.w, vertical: 8.h),
+                              horizontal: 20.w, vertical: 16.h),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(30),
+                            ),
+                            borderSide: BorderSide(
+                              color: AppColors.greenColor.withOpacity(0.3),
+                            ),
+                          ),
                           border: const OutlineInputBorder(
                             borderRadius: BorderRadius.all(
                               Radius.circular(30),
                             ),
                           ),
                           constraints: BoxConstraints(
-                            maxHeight: 50.h,
+                            maxHeight: 60.h,
                           ),
                         ),
                       )
